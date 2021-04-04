@@ -552,6 +552,43 @@ public class SuanFaHaHaHa {
             }
             return max - 1;
         }
+
+        /**
+         * 动态规划
+         * 默认单字符是回文子串，构建 动态二维数组dp 存的是字符串2个下标对应的是否回文子串
+         * 从2个长度开始
+         * 由后向前进行判断，只要前index和后index中间的是回文子串则当前也是回文子串
+         * @param A
+         * @param n
+         * @return
+         */
+        public int getLongestPalindrome(String A, int n) {
+            if(n == 0 || n ==1) {
+                return 0;
+            }
+            char[] arr = A.toCharArray();
+            int max = 1;
+            boolean[][] dp = new boolean[n][n];
+            for(int i = 0; i< n; i++) {
+                dp[i][i] = true;
+            }
+            for(int i = 0; i < n; i++) {
+                for(int j = i-1; j>=0; j--) {
+                    if(i - j == 1) {
+                        dp[j][i] =  arr[i] == arr[j];
+                        if(dp[j][i]) {
+                            max = Math.max(max, i-j+1);
+                        }
+                    } else {
+                        if(dp[j+1][i-1] && arr[i] == arr[j]) {
+                            dp[j][i] = true;
+                            max = Math.max(max, i-j+1);
+                        }
+                    }
+                }
+            }
+            return max;
+        }
     }
 
     /**
