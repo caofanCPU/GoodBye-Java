@@ -23,6 +23,7 @@
 
         <d8ger.version>1.2.0</d8ger.version>
         <lomok.version>1.18.8</lomok.version>
+        <redisson.version>3.15.3</redisson.version>
 
     </properties>
 
@@ -51,6 +52,17 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
             <version>${lomok.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-data-22</artifactId>
+            <version>3.11.6</version>
         </dependency>
 
     </dependencies>

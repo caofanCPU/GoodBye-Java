@@ -1,0 +1,98 @@
+= ㍿ 概览
+帝八哥<xyb5to0zcy@gmail.com>
+v1.0, 2021-04-01
+:toc: right
+
+== Java
+=== JDK算法与数据结构
+=== Java基础搞怪
+=== Java中的IO
+=== JVM
+=== 源码分析
+
+== Java框架
+=== Spring
+=== SpringBoot
+=== SpringCloud
+=== Istio(Service Mesh)
+=== 源码分析
+
+== *#中间件#*(通用, 支持主流语言)
+=== 数据库
+==== MySQL
+==== MongoDB
+==== PostgreSQL
+==== HBase
+==== 架构分析
+
+=== 缓存
+==== Redis(分布式缓存)
+==== Caffeine Cache(内存缓存)
+==== Spring Cache(内存缓存)
+==== 源码分析
+
+=== 消息队列
+==== Kafka
+==== RocketMQ
+==== RabbitMQ
+==== QMQ(Qunar Message Queue)
+==== 架构分析
+
+=== 集群管理(分布式一致性协调)
+==== Zookeeper
+
+=== 分布式任务调度
+==== xxl-job
+==== Elastic-Job
+==== Yarn
+
+=== 分布式系统系统
+** 事务
+** 锁
+** 一致性协议
+
+== 大数据
+=== Hive
+=== Hadoop
+=== Spark
+=== Flink
+=== Machine Learning
+=== Artificial Intelligence
+
+== 网络
+=== 协议
+- 传输协议TCP/IP
+- 应用层协议HTTP/HTTPS/SLB
+- RCP协议
+
+=== Netty
+
+== 操作系统
+=== 文件
+=== 用户
+=== 磁盘
+=== 内核
+=== Tips
+- 常用工具与命令
+- 常见问题排查集锦
+
+== 数据结构与算法
+=== 数据结构
+** 数组
+** 链表
+** 树
+** 栈
+** 队列(阻塞队列, 双端队列, Redis队列)
+** 跳跃表(Redis)
+** 图
+
+=== 算法套路
+** 动态规划(有典型的二维表)
+** 递归(自顶向下)
+** 尾递归
+** 迭代(自底向上)
+** 位运算, 位图数组
+** 排序算法(快排, 归并, 堆排)
+
+== AsciiDoc语法说明
+https://asciidoctor.cn/docs/asciidoc-syntax-quick-reference/#[官方文档]
