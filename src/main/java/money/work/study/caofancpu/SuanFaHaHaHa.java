@@ -22,8 +22,10 @@ import java.util.Stack;
 public class SuanFaHaHaHa {
 
     public static void main(String[] args) {
-        new 基础二叉树().test();
-
+//        new 基础二叉树().test();
+//        new 二叉树最大路径和().test();
+//        new 平衡二叉树().test();
+        new 环球旅行().test();
     }
 
     public static abstract class Base {
@@ -664,18 +666,40 @@ public class SuanFaHaHaHa {
 
     }
 
-    // TODO
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
     public static class 二叉树最大路径和 extends Base {
-        private int a = 1;
+        private int maxSum = Integer.MIN_VALUE;
 
         @Override
         void test() {
+            TreeNode<Integer> root = new 基础二叉树().loadTree();
+            getMax(root);
+            System.out.println("最大路径和为: " + maxSum);
+        }
 
+        /**
+         * 二叉树最大路径和
+         * 6行代码
+         * null节点为0递归返回
+         * left, right
+         * 历史值与root.value + left + right比较
+         * 返回root.value + Max(left, right)
+         *
+         * @param node
+         * @return
+         */
+        public int getMax(TreeNode<Integer> node) {
+            if (Objects.isNull(node)) {
+                return 0;
+            }
+            int left = Math.max(0, getMax(node.getLeft()));
+            int right = Math.max(0, getMax(node.getRight()));
+            maxSum = Math.max(maxSum, node.getValue() + left + right);
+            return node.getValue() + Math.max(left , right);
         }
     }
 
@@ -685,48 +709,28 @@ public class SuanFaHaHaHa {
     @NoArgsConstructor
     @Accessors(chain = true)
     public static class 平衡二叉树 extends Base {
-        private boolean result;
+        private boolean balance;
         private TreeNode<Integer> root;
         private int height = 1;
 
         public int getDepth(TreeNode<Integer> root) {
             if (root == null) {
-                result = true;
                 return 0;
             }
             // 左子树
             int left = getDepth(root.left) + 1;
             // 右子树
             int right = getDepth(root.right) + 1;
-            int depth = (Math.max(left, right));
-            result = Math.abs(left - right) <= 1;
-            // 下层的深度, 上层可以接着用免得再遍历
-            return depth;
+            balance = Math.abs(left - right) <= 1;
+            height = Math.max(left, right);
+            return height;
         }
 
         @Override
         void test() {
-            buildTree(true);
-            height = getDepth(root);
-            System.out.println("高度: " + height + ", 平衡: " + result);
-            buildTree(false);
-            height = getDepth(root);
-            System.out.println("高度: " + height + ", 平衡: " + result);
-        }
-
-        private void buildTree(boolean balance) {
-            root = new TreeNode<>(1);
-            TreeNode<Integer> node2 = new TreeNode<>(2);
-            TreeNode<Integer> node3 = new TreeNode<>(3);
-            TreeNode<Integer> node4 = new TreeNode<>(4);
-            if (balance) {
-                root.setLeft(node2).setRight(node3);
-                node3.setRight(node4);
-            } else {
-                root.setLeft(node2);
-                node2.setLeft(node3);
-                node3.setRight(node4);
-            }
+            root = new 基础二叉树().loadTree();
+            getDepth(root);
+            System.out.println("二叉树深度: " + height + ", 是否平衡: " + balance);
         }
     }
 
@@ -736,7 +740,7 @@ public class SuanFaHaHaHa {
      * .深度优先遍历: 前序(根左右)、中序(左根右)、后序遍历(左右根), 站在根节点的视角, 并且始终先左后右
      * .广度优先(层次)遍历:
      * 递归的边界, 转迭代, 解题时用外部变量收集结果
-     *
+     * <p>
      * 思考: 左、右、根, 三个元素的完全排列是6种
      * 根左右: 前序遍历; 根右左: _前序遍历
      * 左根右: 中序遍历; 右根左: _中序遍历
@@ -1090,7 +1094,7 @@ public class SuanFaHaHaHa {
                         queue.offer(poll.getRight());
                     }
                     if (Objects.equals(TraverseTypeEnum.LEVEL_ALL, traverseType)
-                            ||  Objects.equals(TraverseTypeEnum.LEVEL_ZIGZAG, traverseType)
+                            || Objects.equals(TraverseTypeEnum.LEVEL_ZIGZAG, traverseType)
                             // 左视图, 注意while循环获取第一个元素后i为1
                             || (Objects.equals(TraverseTypeEnum.LEVEL_LEFT, traverseType) && i == 1)
                             // 右视图, 注意while循环获取最后一个元素i后为currentLevelSize
@@ -1151,6 +1155,11 @@ public class SuanFaHaHaHa {
             }
         }
 
+        public TreeNode<Integer> loadTree() {
+            buildTree(new int[]{5, 3, 7, 1, 4, 6, 8, 0, 2, 9});
+            return root;
+        }
+
         /**
          * ⓪①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳
          * 层次遍历结果: 5,3,7,1,4,6,8,0,2,9
@@ -1159,7 +1168,7 @@ public class SuanFaHaHaHa {
          * .    ①••••④••••⑥••••⑧
          * . ⓪••••②•••••••••••••••⑨
          */
-        public TreeNode<Integer> buildTree(int[] values) {
+        private TreeNode<Integer> buildTree(int[] values) {
             root = new TreeNode<>(values[0]);
             originNodeValveList.add(root.getValue());
             for (int i = 1; i < values.length; i++) {
@@ -1168,9 +1177,9 @@ public class SuanFaHaHaHa {
             }
             System.out.println(
                     "                      ⑤\n" +
-                    "                ③••••••••••⑦\n" +
-                    "             ①••••④••••⑥••••⑧\n" +
-                    "          ⓪••••②•••••••••••••••⑨"
+                            "                ③••••••••••⑦\n" +
+                            "             ①••••④••••⑥••••⑧\n" +
+                            "          ⓪••••②•••••••••••••••⑨"
             );
             return root;
         }
