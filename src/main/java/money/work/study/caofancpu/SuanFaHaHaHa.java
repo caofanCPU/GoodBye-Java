@@ -1074,9 +1074,9 @@ public class SuanFaHaHaHa {
             queue.offer(node);
             int level = 1;
             while (CollectionUtil.isNotEmpty(queue)) {
-                int i = 0;
                 int currentLevelSize = queue.size();
                 List<Integer> currentLevelValueList = new ArrayList<>(currentLevelSize);
+                int i = 0;
                 while (i++ < currentLevelSize) {
                     // 遍历同层
                     TreeNode<Integer> poll = queue.poll();
@@ -1091,8 +1091,10 @@ public class SuanFaHaHaHa {
                     }
                     if (Objects.equals(TraverseTypeEnum.LEVEL_ALL, traverseType)
                             ||  Objects.equals(TraverseTypeEnum.LEVEL_ZIGZAG, traverseType)
-                            || (Objects.equals(TraverseTypeEnum.LEVEL_LEFT, traverseType) && i == 0)
-                            || (Objects.equals(TraverseTypeEnum.LEVEL_RIGHT, traverseType) && (i == currentLevelSize - 1))) {
+                            // 左视图, 注意while循环获取第一个元素后i为1
+                            || (Objects.equals(TraverseTypeEnum.LEVEL_LEFT, traverseType) && i == 1)
+                            // 右视图, 注意while循环获取最后一个元素i后为currentLevelSize
+                            || (Objects.equals(TraverseTypeEnum.LEVEL_RIGHT, traverseType) && (i == currentLevelSize))) {
                         // 全部; 左视图; 右视图; 之字型
                         currentLevelValueList.add(poll.getValue());
                     }
