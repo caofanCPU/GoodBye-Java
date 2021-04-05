@@ -1,34 +1,28 @@
 package money.work.study.caofancpu;
 
+import com.google.common.collect.Lists;
+import com.xyz.caofancpu.constant.IEnum;
+import com.xyz.caofancpu.core.CollectionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Queue;
 import java.util.Random;
+import java.util.Stack;
 
 public class SuanFaHaHaHa {
 
     public static void main(String[] args) {
-//        new 最长回文子串().test();
-//        new 最长公共子串("ac", "ab").test();
-//        new 最长公共子串("gc", "ab").test();
-//        new 最长公共子串("abc", "abcd").test();
-//        new 最长公共子串("acdf", "fdca").test();
-//        new 最长公共子串("acaddd", new StringBuilder("acaddd").reverse().toString()).test();
-//        new 最长公共子数组().test();
-//        new 跳台阶(30).test();
-
-//        new 环球旅行(3, 3).test();
-//        System.out.println();
-        new 平衡二叉树().test();
-//
-//        new 环球旅行(2, 2).test();
-//        System.out.println();
-//
-//        new 环球旅行(2, 1).test();
-//        System.out.println();
+        new 基础二叉树().test();
 
     }
 
@@ -558,31 +552,32 @@ public class SuanFaHaHaHa {
          * 默认单字符是回文子串，构建 动态二维数组dp 存的是字符串2个下标对应的是否回文子串
          * 从2个长度开始
          * 由后向前进行判断，只要前index和后index中间的是回文子串则当前也是回文子串
+         *
          * @param A
          * @param n
          * @return
          */
         public int getLongestPalindrome(String A, int n) {
-            if(n == 0 || n ==1) {
+            if (n == 0 || n == 1) {
                 return 0;
             }
             char[] arr = A.toCharArray();
             int max = 1;
             boolean[][] dp = new boolean[n][n];
-            for(int i = 0; i< n; i++) {
+            for (int i = 0; i < n; i++) {
                 dp[i][i] = true;
             }
-            for(int i = 0; i < n; i++) {
-                for(int j = i-1; j>=0; j--) {
-                    if(i - j == 1) {
-                        dp[j][i] =  arr[i] == arr[j];
-                        if(dp[j][i]) {
-                            max = Math.max(max, i-j+1);
+            for (int i = 0; i < n; i++) {
+                for (int j = i - 1; j >= 0; j--) {
+                    if (i - j == 1) {
+                        dp[j][i] = arr[i] == arr[j];
+                        if (dp[j][i]) {
+                            max = Math.max(max, i - j + 1);
                         }
                     } else {
-                        if(dp[j+1][i-1] && arr[i] == arr[j]) {
+                        if (dp[j + 1][i - 1] && arr[i] == arr[j]) {
                             dp[j][i] = true;
-                            max = Math.max(max, i-j+1);
+                            max = Math.max(max, i - j + 1);
                         }
                     }
                 }
@@ -700,10 +695,10 @@ public class SuanFaHaHaHa {
                 return 0;
             }
             // 左子树
-            int left = getDepth(root.left);
+            int left = getDepth(root.left) + 1;
             // 右子树
-            int right = getDepth(root.right);
-            int depth = (Math.max(left, right)) + 1;
+            int right = getDepth(root.right) + 1;
+            int depth = (Math.max(left, right));
             result = Math.abs(left - right) <= 1;
             // 下层的深度, 上层可以接着用免得再遍历
             return depth;
@@ -735,6 +730,496 @@ public class SuanFaHaHaHa {
         }
     }
 
+    /**
+     * 二叉树基础:
+     * <p>
+     * .深度优先遍历: 前序(根左右)、中序(左根右)、后序遍历(左右根), 站在根节点的视角, 并且始终先左后右
+     * .广度优先(层次)遍历:
+     * 递归的边界, 转迭代, 解题时用外部变量收集结果
+     *
+     * 思考: 左、右、根, 三个元素的完全排列是6种
+     * 根左右: 前序遍历; 根右左: _前序遍历
+     * 左根右: 中序遍历; 右根左: _中序遍历
+     * 左右根: 后序遍历; 右左根: _后序遍历
+     * 可以得到有趣的对称形式:
+     * (根左右: 前序遍历)与(右左根: _中序遍历)正好逆序
+     * (左根右: 中序遍历)与(右根左: _中序遍历)正好逆序
+     * (左右根: 后序遍历)与(根右左: _前序遍历)正好逆序
+     * So, 我们试试_前序遍历=前序遍历交换左右, _中序遍历=中序遍历交换左右, _后序遍历=后序遍历交换左右
+     * 启示及结论:
+     * 前序、中序的递归和栈迭代好写, 记住关键字
+     * 但是后序的栈迭代就可以这么干了:
+     * 左根右(中序) <==> 右根左逆序, 也就是中序遍历 <==>_中序遍历逆序, 这个结论没啥用, 但是有仪式感
+     * 根左右(前序) <==> 右左根逆序
+     * 根右左 <==> 左右根逆序, 左右根(后序) <==> 根左右逆序, 这不就是: 后序遍历 <==> _前序遍历逆序麽?
+     */
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class 基础二叉树 extends Base {
+        /**
+         * 根节点
+         */
+        private TreeNode<Integer> root;
+        /**
+         * 原始节点值列表
+         */
+        private List<Integer> originNodeValveList = Lists.newArrayList();
+        /**
+         * 遍历节点值结果列表
+         */
+        private List<Integer> traverseNodeValueList = Lists.newArrayList();
+
+        /**
+         * 层次遍历时元素分隔数字
+         */
+        private Integer LEVEL_SPIT_MAGIC_NUMBER = -1;
+
+        @Override
+        void test() {
+            buildTree(new int[]{5, 3, 7, 1, 4, 6, 8, 0, 2, 9});
+            System.out.println("原始节点值" + CollectionUtil.show(originNodeValveList));
+            System.out.println();
+
+            preOrder(root);
+            System.out.println("前序遍历节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            _postOrder(root);
+            System.out.println("(反)_后序遍历节点值" + CollectionUtil.show(traverseNodeValueList));
+            System.out.println("(反)_后序遍历, 再翻转节点值" + CollectionUtil.showArray(reverseArray(traverseNodeValueList.toArray())));
+            traverseNodeValueList.clear();
+
+            stackPreOrder(root);
+            System.out.println("栈前序遍历节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            System.out.println();
+
+            centerOrder(root);
+            System.out.println("中序遍历节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            _centerOrder(root);
+            System.out.println("(反)_中序遍历节点值" + CollectionUtil.show(traverseNodeValueList));
+            System.out.println("(反)_中序遍历, 再翻转节点值" + CollectionUtil.showArray(reverseArray(traverseNodeValueList.toArray())));
+            traverseNodeValueList.clear();
+
+            stackCenterOrder(root);
+            System.out.println("栈中序遍历节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            System.out.println();
+
+            postOrder(root);
+            System.out.println("后序遍历节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            _preOrder(root);
+            System.out.println("(反)_前序遍历节点值" + CollectionUtil.show(traverseNodeValueList));
+            System.out.println("(反)_前序遍历, 再翻转节点值" + CollectionUtil.showArray(reverseArray(traverseNodeValueList.toArray())));
+            traverseNodeValueList.clear();
+
+            stackPostOrder(root);
+            System.out.println("栈后序遍历节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            System.out.println();
+
+            levelOrder(root, TraverseTypeEnum.LEVEL_ALL);
+            System.out.println(TraverseTypeEnum.LEVEL_ALL.getName() + "节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            levelOrder(root, TraverseTypeEnum.LEVEL_LEFT);
+            System.out.println(TraverseTypeEnum.LEVEL_LEFT.getName() + "节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            levelOrder(root, TraverseTypeEnum.LEVEL_RIGHT);
+            System.out.println(TraverseTypeEnum.LEVEL_RIGHT.getName() + "节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            levelOrder(root, TraverseTypeEnum.LEVEL_ZIGZAG);
+            System.out.println(TraverseTypeEnum.LEVEL_ZIGZAG.getName() + "节点值" + CollectionUtil.show(traverseNodeValueList));
+            traverseNodeValueList.clear();
+
+            System.out.println();
+        }
+
+        public enum TraverseTypeEnum implements IEnum {
+            PRE_ORDER(1, "前序遍历"),
+            CENTER_ORDER(2, "中序遍历"),
+            POST_ORDER(3, "后序遍历"),
+            STACK_PRE_ORDER(10, "栈前序遍历"),
+            STACK_CENTER_ORDER(20, "栈中序遍历"),
+            STACK_POST_ORDER(30, "栈后序遍历"),
+
+            OPPOSITE_PRE_ORDER(-1, "反_前序遍历(后序遍历逆序)"),
+            OPPOSITE_CENTER_ORDER(-2, "反_中序遍历(中序遍历逆序)"),
+            OPPOSITE_POST_ORDER(-3, "反_后序遍历(后序遍历逆序)"),
+
+            LEVEL_ALL(4, "层次遍历"),
+            LEVEL_LEFT(5, "左视图层次遍历"),
+            LEVEL_RIGHT(6, "右视图层次遍历"),
+            LEVEL_ZIGZAG(7, "之字型层次遍历"),
+            ;
+
+            @Getter
+            private Integer value;
+            @Getter
+            private String name;
+
+            TraverseTypeEnum(Integer value, String name) {
+                this.value = value;
+                this.name = name;
+            }
+        }
+
+        /**
+         * 前序遍历: "51"job
+         * 5行代码
+         * 1个外部变量收集结果, 或者不需要该变量, 直接打印
+         * 根左右, 根就是当前输入参数, 所以先当前值, 再left, 再right
+         * 为null值就返回, 递归出口
+         *
+         * @param node
+         */
+        public void preOrder(TreeNode<Integer> node) {
+            if (Objects.isNull(node)) {
+                return;
+            }
+            traverseNodeValueList.add(node.getValue());
+            preOrder(node.left);
+            preOrder(node.right);
+        }
+
+        /**
+         * 反后序遍历, 与前序遍历结果互逆, "51"job
+         * 5行代码, 1个外部变量, 右左根, null值返回为递归出口
+         *
+         * @param node
+         */
+        public void _postOrder(TreeNode<Integer> node) {
+            if (Objects.isNull(node)) {
+                return;
+            }
+            _postOrder(node.right);
+            _postOrder(node.left);
+            traverseNodeValueList.add(node.getValue());
+        }
+
+        /**
+         * 栈迭代前序遍历, "84消毒液", 8+(1+1+1+1)
+         * 8行代码
+         * 1个栈
+         * 1个外部变量收集结果, 或者不需要直接打印
+         * 1个while循环, 条件节点非NULL || 栈非空
+         * 1个节点非NULL判断
+         * if分支先push, 前序是根左右, 所以先添加值, 再变为left; else分支pop出来, 再变为right
+         *
+         * @param node
+         */
+        public void stackPreOrder(TreeNode<Integer> node) {
+            Stack<TreeNode<Integer>> stack = new Stack<>();
+            while (Objects.nonNull(node) || CollectionUtil.isNotEmpty(stack)) {
+                if (Objects.nonNull(node)) {
+                    stack.push(node);
+                    traverseNodeValueList.add(node.getValue());
+                    node = node.getLeft();
+                } else {
+                    TreeNode<Integer> pop = stack.pop();
+                    node = pop.getRight();
+                }
+            }
+        }
+
+        /**
+         * 中序遍历: "51"job
+         * 5行代码
+         * 1个外部变量收集结果, 或者不需要直接打印
+         * 左根右, 根就是当前值, 所以先left, 再当前值, 再right
+         * 为null值就返回, 递归出口
+         *
+         * @param node
+         */
+        public void centerOrder(TreeNode<Integer> node) {
+            if (Objects.isNull(node)) {
+                return;
+            }
+            centerOrder(node.left);
+            traverseNodeValueList.add(node.getValue());
+            centerOrder(node.right);
+        }
+
+        /**
+         * 反中序遍历, 与中序遍历结果互逆, "51"job
+         * 5行代码, 1个外部变量, 右根左, null值返回为递归出口
+         *
+         * @param node
+         */
+        public void _centerOrder(TreeNode<Integer> node) {
+            if (Objects.isNull(node)) {
+                return;
+            }
+            _centerOrder(node.right);
+            traverseNodeValueList.add(node.getValue());
+            _centerOrder(node.left);
+        }
+
+        /**
+         * 栈迭代中序遍历: "84消毒液", 8+(1+1+1+1)
+         * 8行代码
+         * 1个栈
+         * 1个外部变量收集结果, 后者不需要直接打印
+         * 1个while循环, 条件为节点非NULL || 栈非空
+         * 1个节点非NULL判断
+         * if分支先push, 中序是左根右, 所以先变为left; else分支再pop出来添加值, 再变为right
+         *
+         * @param node
+         */
+        public void stackCenterOrder(TreeNode<Integer> node) {
+            Stack<TreeNode<Integer>> stack = new Stack<>();
+            while (Objects.nonNull(node) || CollectionUtil.isNotEmpty(stack)) {
+                if (Objects.nonNull(node)) {
+                    stack.push(node);
+                    node = node.getLeft();
+                } else {
+                    TreeNode<Integer> pop = stack.pop();
+                    traverseNodeValueList.add(pop.getValue());
+                    node = pop.getRight();
+                }
+            }
+        }
+
+        /**
+         * 后序遍历: "51"job
+         * 5行代码
+         * 1个外部变量收集结果, 或者不需要直接打印
+         * 左右根, 根就是当前值, 所以先left, 再right, 再当前值
+         * 为null值就返回, 递归出口
+         *
+         * @param node
+         */
+        public void postOrder(TreeNode<Integer> node) {
+            if (Objects.isNull(node)) {
+                return;
+            }
+            postOrder(node.left);
+            postOrder(node.right);
+            traverseNodeValueList.add(node.getValue());
+        }
+
+        /**
+         * 反前序遍历, 与后序遍历结果互逆, "51"job
+         * 5行代码, 1个外部变量, 根右左, null值返回为递归出口
+         *
+         * @param node
+         */
+        public void _preOrder(TreeNode<Integer> node) {
+            if (Objects.isNull(node)) {
+                return;
+            }
+            traverseNodeValueList.add(node.getValue());
+            _preOrder(node.getRight());
+            _preOrder(node.getLeft());
+        }
+
+        /**
+         * 栈迭代后序遍历: "85后", 8+(1+1+1+1)+1
+         * 利用 后序遍历 <==> 反_前序遍历的逆序, 反_前序遍历就是前序遍历, left和right交换
+         * 1个栈
+         * 1个外部变量收集结果
+         * 1个while循环, 条件为节点非null || 栈非空
+         * 1个if判断节点非null
+         * if分支先push, 反_前序是根右左, 所以先添加值, 再变为right; else分支先pop, 再变为left
+         * 最后1步就是结果集逆序
+         *
+         * @param node
+         */
+        public void stackPostOrder(TreeNode<Integer> node) {
+            Stack<TreeNode<Integer>> stack = new Stack<>();
+            while (Objects.nonNull(node) || CollectionUtil.isNotEmpty(stack)) {
+                if (Objects.nonNull(node)) {
+                    stack.push(node);
+                    traverseNodeValueList.add(node.getValue());
+                    node = node.getRight();
+                } else {
+                    TreeNode<Integer> pop = stack.pop();
+                    node = pop.getLeft();
+                }
+            }
+            // 翻转一下就可以咯
+            Collections.reverse(traverseNodeValueList);
+        }
+
+        /**
+         * 层次(广度优先)遍历:
+         * 1个队列, 添加元素offer, 取元素poll
+         * 2个while循环, 外层循环是树的层遍历, 条件是队列非空, 内层循环是每层的元素遍历, 条件是int currentLevelSize = queue.size(); i++ < currentLevelSize
+         * 3个if判断, 1个元素非空, 1个元素left非空就加入队列, 1个元素right非空就加入队列
+         * 4个枚举情况, 层次遍历ALL, 左视图LEFT, 右视图RIGHT, 之字型ZIGZAG
+         * .    左视图就是每层只取最左边, 条件为i == 0才收集结果
+         * .    右视图就是每层只取最右边, 条件为i == currentLevelSize - 1才收集结果(添加元素时也可以先右后左, 这样也转换为i==0)
+         * .    之字型就是普通的层次遍历, 增加层的变量level, 用中间变量currentLevelValueList收集每层结果后, 判断 level++ & 1 == 0的奇偶性, 满足时反转currentLevelValueList结果, 再加入最终结果
+         */
+        public void levelOrder(TreeNode<Integer> node, TraverseTypeEnum traverseType) {
+            if (Objects.isNull(node)) {
+                return;
+            }
+            if (Objects.isNull(traverseType)) {
+                traverseType = TraverseTypeEnum.LEVEL_ALL;
+            }
+            Queue<TreeNode<Integer>> queue = new LinkedList<>();
+            queue.offer(node);
+            int level = 1;
+            while (CollectionUtil.isNotEmpty(queue)) {
+                int i = 0;
+                int currentLevelSize = queue.size();
+                List<Integer> currentLevelValueList = new ArrayList<>(currentLevelSize);
+                while (i++ < currentLevelSize) {
+                    // 遍历同层
+                    TreeNode<Integer> poll = queue.poll();
+                    if (Objects.isNull(poll)) {
+                        continue;
+                    }
+                    if (Objects.nonNull(poll.getLeft())) {
+                        queue.offer(poll.getLeft());
+                    }
+                    if (Objects.nonNull(poll.getRight())) {
+                        queue.offer(poll.getRight());
+                    }
+                    if (Objects.equals(TraverseTypeEnum.LEVEL_ALL, traverseType)
+                            ||  Objects.equals(TraverseTypeEnum.LEVEL_ZIGZAG, traverseType)
+                            || (Objects.equals(TraverseTypeEnum.LEVEL_LEFT, traverseType) && i == 0)
+                            || (Objects.equals(TraverseTypeEnum.LEVEL_RIGHT, traverseType) && (i == currentLevelSize - 1))) {
+                        // 全部; 左视图; 右视图; 之字型
+                        currentLevelValueList.add(poll.getValue());
+                    }
+                }
+                if (Objects.equals(TraverseTypeEnum.LEVEL_ZIGZAG, traverseType) && (level++ & 1) == 0) {
+                    Collections.reverse(currentLevelValueList);
+                }
+                traverseNodeValueList.addAll(currentLevelValueList);
+                // 添加分隔符
+                traverseNodeValueList.add(LEVEL_SPIT_MAGIC_NUMBER);
+            }
+            // 移除最后一个分隔符
+            traverseNodeValueList.remove(traverseNodeValueList.size() - 1);
+        }
+
+        /**
+         * ⓪①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳
+         * .            ①
+         * .       ②        ③
+         * .    ④    ⑤        ⑥
+         * .       ⑦   ⑧
+         *
+         * @see #buildTree(int[])
+         * @see #build8Tree(int)
+         */
+        @Deprecated
+        private void buildTree() {
+            TreeNode<Integer> node1 = new TreeNode<>(1);
+            TreeNode<Integer> node2 = new TreeNode<>(2);
+            TreeNode<Integer> node3 = new TreeNode<>(3);
+            TreeNode<Integer> node4 = new TreeNode<>(4);
+            TreeNode<Integer> node5 = new TreeNode<>(5);
+            TreeNode<Integer> node6 = new TreeNode<>(6);
+            TreeNode<Integer> node7 = new TreeNode<>(7);
+            TreeNode<Integer> node8 = new TreeNode<>(8);
+            jet(node1, node2, node3);
+            jet(node2, node4, node5);
+            jet(node3, null, node6);
+            jet(node5, node7, node8);
+            originNodeValveList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
+            root = node1;
+        }
+
+        @Deprecated
+        private void jet(TreeNode<Integer> root, TreeNode<Integer> left, TreeNode<Integer> right) {
+            if (Objects.isNull(root)) {
+                return;
+            }
+            if (Objects.nonNull(left)) {
+                root.left = left;
+            }
+            if (Objects.nonNull(right)) {
+                root.right = right;
+            }
+        }
+
+        /**
+         * ⓪①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳
+         * 层次遍历结果: 5,3,7,1,4,6,8,0,2,9
+         * .             ⑤
+         * .       ③••••••••••⑦
+         * .    ①••••④••••⑥••••⑧
+         * . ⓪••••②•••••••••••••••⑨
+         */
+        public TreeNode<Integer> buildTree(int[] values) {
+            root = new TreeNode<>(values[0]);
+            originNodeValveList.add(root.getValue());
+            for (int i = 1; i < values.length; i++) {
+                originNodeValveList.add(values[i]);
+                addNode(new TreeNode<>(values[i]), root);
+            }
+            System.out.println(
+                    "                      ⑤\n" +
+                    "                ③••••••••••⑦\n" +
+                    "             ①••••④••••⑥••••⑧\n" +
+                    "          ⓪••••②•••••••••••••••⑨"
+            );
+            return root;
+        }
+
+        /**
+         * ⓪①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳
+         * .                     ⑩
+         * .                   ⑨••⑪
+         * .                 ⑧••••••⑫
+         * .               ⑦••••••••••⑬
+         * .             ⑥••••••••••••••⑭
+         * .           ⑤••••••••••••••••••⑮
+         * .         ④••••••••••••••••••••••⑯
+         * .       ③••••••••••••••••••••••••••⑰
+         * .     ②••••••••••••••••••••••••••••••⑱
+         * .   ①••••••••••••••••••••••••••••••••••⑲
+         * . ⓪••••••••••••••••••••••••••••••••••••••⑳
+         */
+        private void build8Tree(int rootValue) {
+            this.root = new TreeNode<>(rootValue);
+            originNodeValveList.add(root.getValue());
+            for (int i = rootValue - 1; i >= 0; i--) {
+                originNodeValveList.add(i);
+                addNode(new TreeNode<>(i), root);
+            }
+            for (int i = rootValue + 1; i <= 2 * rootValue; i++) {
+                originNodeValveList.add(i);
+                addNode(new TreeNode<>(i), root);
+            }
+        }
+
+        private void addNode(TreeNode<Integer> current, TreeNode<Integer> refer) {
+            if (Objects.isNull(current) || Objects.isNull(refer)) {
+                return;
+            }
+            if (current.getValue() <= refer.getValue()) {
+                if (Objects.isNull(refer.getLeft())) {
+                    refer.setLeft(current);
+                } else {
+                    addNode(current, refer.getLeft());
+                }
+            } else {
+                if (Objects.isNull(refer.getRight())) {
+                    refer.setRight(current);
+                } else {
+                    addNode(current, refer.getRight());
+                }
+            }
+        }
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -747,6 +1232,30 @@ public class SuanFaHaHaHa {
         public TreeNode(T value) {
             this.value = value;
         }
+    }
+
+
+    public static Object[] reverseArray(Object[] array) {
+        int i = 0;
+        int j = array.length - 1;
+        Object tmp;
+
+        while (j > i) {
+            tmp = array[j];
+            array[j] = array[i];
+            array[i] = tmp;
+            j--;
+            i++;
+        }
+        return array;
+    }
+
+    public static void bitSkill() {
+        System.out.println("1.异或^         : a^b = b^a");
+        System.out.println("2.异或^         : a^a = 0; a^0 = a; a^1 = a的反码 ==> 应用: 将一个变量快速清零: a = a^a");
+        System.out.println("3.异或^         : a^b^b = a; a^b^a = b ==> 应用: 快速交换两个整数: int x = x^y; int y = x^y; int x = x^y;");
+        System.out.println("4.与&           : ==> 应用: 快速判断奇数偶数: a&1 == 0 ? \"偶数\" : \"奇数\"");
+        System.out.println("5.异或^和右移>>  : ==> 应用: 快速求绝对值: int i = a >> 31; int abs = (a^i) - i; 注意小于或等于Integer.MIN_VALUE求绝对值会溢出得到错误结果");
     }
 
 }
