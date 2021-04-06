@@ -301,7 +301,7 @@ public class USB {
             return;
         }
         // 分一半
-        int midRoller = (start + end) >> 2;
+        int midRoller = (start + end) >> 1;
         recursionMergeSort(source, start, midRoller);
         recursionMergeSort(source, midRoller + 1, end);
         doMerge(source, start, midRoller, end);
