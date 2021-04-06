@@ -57,6 +57,22 @@
 * CAS
 * volatile
 * 线程状态
+** 初始状态NEW
+** 可运行状态RUNNABLE
+*** 可运行状态只是说你资格运行，调度程序没有挑选到你，你就永远是可运行状态。
+*** 调用线程的start()方法，此线程进入可运行状态。
+*** 当前线程sleep()方法结束，其他线程join()结束，等待用户输入完毕，某个线程拿到对象锁，这些线程也将进入可运行状态。
+*** 当前线程时间片用完了，调用当前线程的yield()方法，当前线程进入可运行状态。
+*** 锁池里的线程拿到对象锁后，进入可运行状态。
+** 运行状态RUNNING
+** 阻塞状态BLOCKED
+*** sleep 方法
+*** wait方法
+** 等待WAITING
+** 超时等待TIMED_WAITING
+** 死亡状态DEAD  TERMINSTED
+
+https://blog.csdn.net/pange1991/article/details/53860651
 * JUC包下的抽象同步队列(AQS)
 ** AQS可以引出模板模式, 特点及优缺点
 ** ReentrantLock
