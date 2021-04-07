@@ -317,7 +317,6 @@ public class 算法抄习2 {
             levelTraverseResultList.add(currentLevelValueList);
         }
     }
-
     public static Object[] reverseArray(Object[] array) {
         int i = 0;
         int j = array.length - 1;
@@ -332,5 +331,4 @@ public class 算法抄习2 {
         }
         return array;
     }
-
 }
