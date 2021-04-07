@@ -65,11 +65,11 @@
 *** 当前线程时间片用完了，调用当前线程的yield()方法，当前线程进入可运行状态。
 *** 锁池里的线程拿到对象锁后，进入可运行状态。
 ** 运行状态RUNNING
-** 阻塞状态BLOCKED
-*** sleep 方法
-*** wait方法
-** 等待WAITING
-** 超时等待TIMED_WAITING
+** 阻塞状态
+*** synchronized BLOCKED
+*** sleep TIMED_WAITING(sleeping)
+*** wait TIMED_WAITING(on object monitor) WAITING(on object monitor)
+*** park TIMED_WAITING(parking) WAITING(parking)
 ** 死亡状态DEAD  TERMINSTED
 
 https://blog.csdn.net/pange1991/article/details/53860651
