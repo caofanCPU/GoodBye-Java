@@ -27,11 +27,7 @@ public class Solution {
         System.arraycopy(arr2, 0, source, arr1.length, arr2.length);
         // 归并排序
         merge(source, 0, source.length - 1);
-        if ((source.length & 1) == 0) {
-            return source[source.length / 2 - 1];
-        } else {
-            return source[source.length / 2];
-        }
+        return ((source.length & 1) == 0) ? source[source.length / 2 - 1] : source[source.length / 2];
     }
 
     public void merge(int[] source, int start, int end) {

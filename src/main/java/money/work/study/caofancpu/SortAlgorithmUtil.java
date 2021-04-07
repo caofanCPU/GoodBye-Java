@@ -66,7 +66,7 @@ public class SortAlgorithmUtil {
                 stack.push(start);
             }
 
-            if (end > midRoller + 1) {
+            if (midRoller + 1 < end) {
                 stack.push(end);
                 stack.push(midRoller + 1);
             }

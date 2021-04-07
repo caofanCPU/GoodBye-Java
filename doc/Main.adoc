@@ -7,6 +7,9 @@ v1.0, 2021-04-01
 === @D8ger
 - JUC源码
 - JDK数据结构源码
+- 递归转栈迭代的思路技巧
+- Kafka在Zookeeper中的数据形式
+- Kafka与RocketMQ
 
 == Java
 === JDK算法与数据结构

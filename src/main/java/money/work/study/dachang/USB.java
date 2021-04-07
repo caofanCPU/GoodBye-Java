@@ -1,14 +1,53 @@
 package money.work.study.dachang;
 
+import com.xyz.caofancpu.annotation.WarnDoc;
+import com.xyz.caofancpu.core.CollectionUtil;
+import org.springframework.util.StopWatch;
+
 import java.util.Stack;
 
 /**
- *
+ * 为什么眼里常含泪水, 因为菜得深沉
+ * https://segmentfault.com/a/1190000023647227
  */
 public class USB {
+    private static final StopWatch watch = new StopWatch("ByteCry");
+
+    private static int count = 0;
 
     public static void main(String[] args) {
+        int[] source = initSource();
+        myNonRecursionMergeSort(source, 0, source.length - 1);
+        out("[X]栈迭代归并", source);
+        source = initSource();
+        System.out.println();
 
+        recursionMergeSort(source, 0, source.length - 1);
+        out("递归归并", source);
+        source = initSource();
+        System.out.println();
+
+        hisNonRecursionMergerSort(source, 0, source.length - 1);
+        out("迭代归并", source);
+        source = initSource();
+//
+//        recursionFFTSort(source, 0, source.length - 1);
+//        out("递归快排", source);
+//        source = initSource();
+//
+//        nonRecursionFFTSort(source, 0, source.length - 1);
+//        out("栈迭代快排", source);
+//        source = initSource();
+
+    }
+
+    public static int[] initSource() {
+        count = 0;
+        return new int[]{3, 6, 1, 2, 4, 7, 9};
+    }
+
+    public static void out(String msg, int[] arr) {
+        System.out.println(msg + ": " + CollectionUtil.showArray(arr));
     }
 
     public static void nonRecursionFFTSort(int[] source, int start, int end) {
@@ -302,9 +341,63 @@ public class USB {
         }
         // 分一半
         int midRoller = (start + end) >> 1;
-        recursionMergeSort(source, start, midRoller);
-        recursionMergeSort(source, midRoller + 1, end);
+        if (start < midRoller) {
+            recursionMergeSort(source, start, midRoller);
+        }
+        if (midRoller + 1 < end) {
+            recursionMergeSort(source, midRoller + 1, end);
+        }
         doMerge(source, start, midRoller, end);
+    }
+
+    public static void myNonRecursionMergeSort(int[] source, int start, int end) {
+        if (start >= end) {
+            return;
+        }
+        // 拆分的参数栈
+        Stack<Integer> splitStack = new Stack<>();
+        splitStack.push(end);
+        splitStack.push(start);
+        // 合并的参数栈
+        Stack<Integer> mergeStack = new Stack<>();
+        while (!splitStack.isEmpty()) {
+            start = splitStack.pop();
+            end = splitStack.pop();
+            mergeStack.push(end);
+            mergeStack.push(start);
+            int midRoller = (start + end) >> 1;
+            if (start < midRoller) {
+                splitStack.push(midRoller);
+                splitStack.push(start);
+            }
+            if (midRoller + 1 < end) {
+                splitStack.push(end);
+                splitStack.push(midRoller + 1);
+            }
+        }
+        while (!mergeStack.isEmpty()) {
+            start = mergeStack.pop();
+            end = mergeStack.pop();
+            doMerge(source, start, (start + end) >> 1, end);
+        }
+    }
+
+    @Deprecated
+    @WarnDoc("不易懂, 取巧型")
+    public static void hisNonRecursionMergerSort(int[] originArray, int start, int end) {
+        if (start >= end) {
+            return;
+        }
+        // 循环一致化-while循环, 注意 + - 与 位运算的优先级
+        int subLength = 1;
+        while (subLength <= originArray.length) {
+            int i = start;
+            while (i + subLength <= end) {
+                doMerge(originArray, i, i + subLength - 1, Math.min(i + (subLength << 1) - 1, originArray.length - 1));
+                i += (subLength << 1);
+            }
+            subLength <<= 1;
+        }
     }
 
     public static void doMerge(int[] source, int start, int midRoller, int end) {
@@ -329,5 +422,90 @@ public class USB {
             temp[k++] = source[j++];
         }
         System.arraycopy(temp, 0, source, start, temp.length);
+        System.out.println(tab(++count, start, midRoller, end) + ", " + "-> UPDATE" + CollectionUtil.showArray(source));
     }
+
+    private static String tab(int n, int start, int midRoller, int end) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 1; i < n; i++) {
+            result.append("    ");
+        }
+        return result.toString() + "第" + n + "次[" + start + "|" + midRoller + "|" + end + "]";
+    }
+
+
+    public static void fk_recursion_fft(int[] source, int start, int end) {
+        // 快排, 中轴排序, 根据中轴分别排两边
+        if (start >= end) {
+            return;
+        }
+        // 确定中轴, 并将数据分散到中轴两边
+        int midRoller = fk_partition(source, start, end);
+        if (start < midRoller - 1) {
+            // 中轴左边递归排序处理
+            fk_recursion_fft(source, start, midRoller - 1);
+        }
+        if (midRoller + 1 < end) {
+            // 中轴右边递归排序处理
+            fk_recursion_fft(source, midRoller + 1, end);
+        }
+    }
+
+
+    public static void fk_nonRecursion_fft(int[] source, int start, int end) {
+        if (start >= end) {
+            return;
+        }
+        // 递归的快排改变的信息是什么?
+        // 数组原地排序, 就是start和end值
+        // 找中轴, 然后中轴作为左区间的end值, 作为右区间的起始值
+        Stack<Integer> stack = new Stack<>();
+        stack.push(end);
+        stack.push(start);
+        while (!stack.isEmpty()) {
+            start = stack.pop();
+            end = stack.pop();
+            int midRoller = fk_partition(source, start, end);
+            if (start < midRoller - 1) {
+                stack.push(midRoller - 1);
+                stack.push(start);
+            }
+            if (midRoller + 1 < end) {
+                stack.push(end);
+                stack.push(midRoller + 1);
+            }
+        }
+    }
+
+    public static int fk_partition(int[] source, int start, int end) {
+        // 选定参考值
+        int rv = source[start];
+        // 假定增序, 左边为小于参考值的, 右边为大于参考值的
+        while (start < end) {
+            // 左边大值往右边跑
+            while (source[end] >= rv && end > start) {
+                end--;
+            }
+            if (end != start) {
+                // 不相等说明是小值, 要跑到左边去
+                source[start] = source[end];
+            }
+
+            // 对称性: 右边小值往左边跑
+            while (source[start] <= rv && start < end ) {
+                start++;
+            }
+            if (start != end) {
+                // 不相等说明是大值, 要跑到右边去
+                source[end] = source[start];
+            }
+        }
+        // 处理完后, start一定是索引中轴, 再把中轴值rv回写进去
+        source[start] = rv;
+        return start;
+    }
+
+
+
+
 }
