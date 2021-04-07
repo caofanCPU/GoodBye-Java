@@ -1,14 +1,17 @@
 package money.work.study.dachang;
 
 import com.google.common.collect.Lists;
+import com.xyz.caofancpu.core.CollectionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Stack;
 
 /**
  * 二叉树遍历, 递归和非递归有助于思考用栈替换递归, 以及探明递归究竟在干啥
@@ -40,9 +43,82 @@ public class 二叉树遍历算法 {
      * 层次遍历结果存储容器
      */
     private static List<List<Integer>> levelResult = new ArrayList<>();
+
+    private static int count = 0;
     
     public static void main(String[] args) {
-        
+        showOriginNodeData();
+        TreeNode<Integer> root = TreeNodeTestUtil.root;
+        preOrder(root);
+        clear();
+
+        stackPreOrder(root);
+        clear();
+
+        _postOrder(root);
+        clear();
+
+        stack_PostOrder(root);
+        clear();
+
+        centerOrder(root);
+        clear();
+
+        stackCenterOrder(root);
+        clear();
+
+        _centerOrder(root);
+        clear();
+
+        stack_CenterOrder(root);
+        clear();
+
+        postOrder(root);
+        clear();
+
+        stackPostOrder(root);
+        clear();
+
+        _preOrder(root);
+        clear();
+
+        stack_PreOrder(root);
+        clear();
+
+
+    }
+
+    private static void showOriginNodeData() {
+        if (TreeNodeTestUtil.root == null) {
+            TreeNodeTestUtil.loadTree();
+        }
+        System.out.println("原始二叉树节点数据: " + CollectionUtil.show(TreeNodeTestUtil.originNodeValveList));
+        // 计数器清零, 递归、迭代次数清零
+        count = 0;
+    }
+
+    private static void clear() {
+        count = 0;
+        deepResult.clear();
+        levelResult.clear();
+    }
+
+    /**
+     * 栈调试
+     */
+    private static <T> String debuggerView(int n, String msg, List<T> source) {
+        return view(n) + "第" + n + "次[" + msg + ", " + "-> UPDATE[" + CollectionUtil.show(source) + "]";
+    }
+
+    /**
+     * tab递进, 很适合调试循环、递归
+     */
+    private static String view(int n) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 1; i < n; i++) {
+            result.append("    ");
+        }
+        return result.toString();
     }
 
     /**
@@ -57,8 +133,35 @@ public class 二叉树遍历算法 {
             return;
         }
         deepResult.add(node.getValue());
+        System.out.println(debuggerView(++count, "递归前序遍历", deepResult));
         preOrder(node.getLeft());
         preOrder(node.getRight());
+    }
+
+    /**
+     * 前序遍历, 非递归, 直接用栈代替递归
+     * 分析前序递归形式的代码, 添加节点是在两次递归之前
+     * 其递归添加形式: 当前节点->当前节点的左节点->当前节点的右节点
+     */
+    public static void stackPreOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        while (node != null || !stack.isEmpty()) {
+            if (node != null) {
+                // 添加节点
+                stack.push(node);
+                // 前序: 根左右
+                deepResult.add(node.getValue());
+                System.out.println(debuggerView(++count, "栈迭代前序遍历", deepResult));
+                // 取左节点
+                node = node.getLeft();
+            } else {
+                TreeNode<Integer> pop = stack.pop();
+                node = pop.getRight();
+            }
+        }
     }
 
     /**
@@ -72,6 +175,29 @@ public class 二叉树遍历算法 {
         _postOrder(node.getRight());
         _postOrder(node.getLeft());
         deepResult.add(node.getValue());
+        System.out.println(debuggerView(++count, "递归反_后序遍历", deepResult));
+    }
+
+    public static void stack_PostOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        while (node != null || !stack.isEmpty()) {
+            if (node != null) {
+                stack.push(node);
+                // 反_后序遍历: 右左根 ==> 根左右=前序, 逆序
+                // 取右节点
+                deepResult.add(node.getValue());
+                System.out.println(debuggerView(++count, "栈迭代反_后序遍历", deepResult));
+                node = node.getLeft();
+            } else {
+                TreeNode<Integer> pop = stack.pop();
+                node = pop.getRight();
+            }
+        }
+        Collections.reverse(deepResult);
+        System.out.println(debuggerView(count, "(最终)栈迭代反_后序遍历", deepResult));
     }
 
     /**
@@ -84,7 +210,34 @@ public class 二叉树遍历算法 {
         }
         centerOrder(node.getLeft());
         deepResult.add(node.getValue());
+        System.out.println(debuggerView(++count, "递归中序遍历", deepResult));
         centerOrder(node.getRight());
+    }
+
+    /**
+     * 中序遍历, 非递归, 直接用栈代替递归
+     * 分析前序递归形式的代码, 添加节点是在两次递归中间
+     * 其递归添加形式: 当前节点的左节点->当前节点->当前节点的右节点
+     */
+    public static void stackCenterOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        while (node != null || !stack.isEmpty()) {
+            if (node != null) {
+                // 添加节点
+                stack.push(node);
+                // 中序: 左根右
+                // 取左节点
+                node = node.getLeft();
+            } else {
+                TreeNode<Integer> pop = stack.pop();
+                deepResult.add(pop.getValue());
+                System.out.println(debuggerView(++count, "栈迭代中序遍历", deepResult));
+                node = pop.getRight();
+            }
+        }
     }
 
     /**
@@ -97,8 +250,29 @@ public class 二叉树遍历算法 {
         }
         _centerOrder(node.getRight());
         deepResult.add(node.getValue());
+        System.out.println(debuggerView(++count, "递归反_中序遍历", deepResult));
         _centerOrder(node.getLeft());
 
+    }
+
+    public static void stack_CenterOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        while (node != null || !stack.isEmpty()) {
+            if (node != null) {
+                stack.push(node);
+                // 反_中序遍历: 右根左
+                // 取右节点
+                node = node.getRight();
+            } else {
+                TreeNode<Integer> pop = stack.pop();
+                deepResult.add(pop.getValue());
+                System.out.println(debuggerView(++count, "栈迭代反_中序遍历", deepResult));
+                node = pop.getLeft();
+            }
+        }
     }
 
     /**
@@ -112,6 +286,30 @@ public class 二叉树遍历算法 {
         postOrder(node.getLeft());
         postOrder(node.getRight());
         deepResult.add(node.getValue());
+        System.out.println(debuggerView(++count, "递归后序遍历", deepResult));
+    }
+
+    public static void stackPostOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        while (node != null || !stack.isEmpty()) {
+            if (node != null) {
+                stack.push(node);
+                // 后序遍历: 右左根
+                // 取右节点
+                deepResult.add(node.getValue());
+                System.out.println(debuggerView(++count, "栈迭代后序遍历", deepResult));
+                node = node.getRight();
+            } else {
+                TreeNode<Integer> pop = stack.pop();
+                node = pop.getLeft();
+            }
+        }
+        // 逆序
+        Collections.reverse(deepResult);
+        System.out.println(debuggerView(count, "(最终)栈迭代后序遍历", deepResult));
     }
 
     /**
@@ -123,8 +321,29 @@ public class 二叉树遍历算法 {
             return;
         }
         deepResult.add(node.getValue());
-        _postOrder(node.getRight());
-        _postOrder(node.getLeft());
+        System.out.println(debuggerView(++count, "递归反_前序遍历", deepResult));
+        _preOrder(node.getRight());
+        _preOrder(node.getLeft());
+    }
+
+    public static void stack_PreOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        while (node != null || !stack.isEmpty()) {
+            if (node != null) {
+                stack.push(node);
+                // 反_前序遍历: 根右左
+                // 取右节点
+                deepResult.add(node.getValue());
+                System.out.println(debuggerView(++count, "栈迭代反_前序遍历", deepResult));
+                node = node.getRight();
+            } else {
+                TreeNode<Integer> pop = stack.pop();
+                node = pop.getLeft();
+            }
+        }
     }
 
 
