@@ -9,8 +9,10 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -61,6 +63,7 @@ public class 二叉树遍历算法 {
         stack_PostOrder(root);
         clear();
 
+        showOriginNodeData();
         centerOrder(root);
         clear();
 
@@ -73,6 +76,7 @@ public class 二叉树遍历算法 {
         stack_CenterOrder(root);
         clear();
 
+        showOriginNodeData();
         postOrder(root);
         clear();
 
@@ -85,16 +89,29 @@ public class 二叉树遍历算法 {
         stack_PreOrder(root);
         clear();
 
+        showOriginNodeData();
+        levelOrder(root);
+        clear();
+
+        levelLeftOrder(root);
+        clear();
+
+        levelRightOrder(root);
+        clear();
+
+        levelZigZagOrder(root);
+        clear();
+
 
     }
 
     private static void showOriginNodeData() {
-        if (TreeNodeTestUtil.root == null) {
-            TreeNodeTestUtil.loadTree();
-        }
-        System.out.println("原始二叉树节点数据: " + CollectionUtil.show(TreeNodeTestUtil.originNodeValveList));
         // 计数器清零, 递归、迭代次数清零
         count = 0;
+        TreeNodeTestUtil.root = null;
+        TreeNodeTestUtil.originNodeValveList = new ArrayList<>();
+        TreeNodeTestUtil.loadTree();
+        System.out.println("原始二叉树节点数据: " + CollectionUtil.show(TreeNodeTestUtil.originNodeValveList));
     }
 
     private static void clear() {
@@ -346,7 +363,132 @@ public class 二叉树遍历算法 {
         }
     }
 
+    public static void levelOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
+        queue.offer(node);
+        while (!queue.isEmpty()) {
+            int currentLevelSize = queue.size();
+            List<Integer> currentLevelNodeValueList = new ArrayList<>(currentLevelSize);
+            // 循环遍历
+            int i = 0;
+            while (i++ < currentLevelSize) {
+                TreeNode<Integer> poll = queue.poll();
+                if (poll == null) {
+                    continue;
+                }
+                if (poll.getLeft() != null) {
+                    queue.offer(poll.getLeft());
+                }
+                if (poll.getRight() != null) {
+                    queue.offer(poll.getRight());
+                }
+                currentLevelNodeValueList.add(poll.getValue());
+            }
+            levelResult.add(currentLevelNodeValueList);
+            System.out.println(debuggerView(++count, "层次遍历-ALL", levelResult));
+        }
+    }
 
+    public static void levelLeftOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
+        queue.offer(node);
+        while (!queue.isEmpty()) {
+            int currentLevelSize = queue.size();
+            List<Integer> currentLevelNodeValueList = new ArrayList<>(currentLevelSize);
+            // 循环遍历
+            int i = 0;
+            while (i++ < currentLevelSize) {
+                TreeNode<Integer> poll = queue.poll();
+                if (poll == null) {
+                    continue;
+                }
+                if (poll.getLeft() != null) {
+                    queue.offer(poll.getLeft());
+                }
+                if (poll.getRight() != null) {
+                    queue.offer(poll.getRight());
+                }
+                if (i == 1) {
+                    // 左视图: 第一次, 首个元素
+                    currentLevelNodeValueList.add(poll.getValue());
+                }
+            }
+            levelResult.add(currentLevelNodeValueList);
+            System.out.println(debuggerView(++count, "层次遍历-LEFT", levelResult));
+        }
+    }
+
+    public static void levelRightOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
+        queue.offer(node);
+        while (!queue.isEmpty()) {
+            int currentLevelSize = queue.size();
+            List<Integer> currentLevelNodeValueList = new ArrayList<>(currentLevelSize);
+            // 循环遍历
+            int i = 0;
+            while (i++ < currentLevelSize) {
+                TreeNode<Integer> poll = queue.poll();
+                if (poll == null) {
+                    continue;
+                }
+                if (poll.getLeft() != null) {
+                    queue.offer(poll.getLeft());
+                }
+                if (poll.getRight() != null) {
+                    queue.offer(poll.getRight());
+                }
+                if (i == currentLevelSize) {
+                    // 右视图: 最后一个元素
+                    currentLevelNodeValueList.add(poll.getValue());
+                }
+            }
+            levelResult.add(currentLevelNodeValueList);
+            System.out.println(debuggerView(++count, "层次遍历-RIGHT", levelResult));
+        }
+    }
+
+    public static void levelZigZagOrder(TreeNode<Integer> node) {
+        if (node == null) {
+            return;
+        }
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
+        queue.offer(node);
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int currentLevelSize = queue.size();
+            List<Integer> currentLevelNodeValueList = new ArrayList<>(currentLevelSize);
+            // 循环遍历
+            int i = 0;
+            while (i++ < currentLevelSize) {
+                TreeNode<Integer> poll = queue.poll();
+                if (poll == null) {
+                    continue;
+                }
+                if (poll.getLeft() != null) {
+                    queue.offer(poll.getLeft());
+                }
+                if (poll.getRight() != null) {
+                    queue.offer(poll.getRight());
+                }
+                currentLevelNodeValueList.add(poll.getValue());
+            }
+            if (((level++) & 1) == 0) {
+                // 反序
+                Collections.reverse(currentLevelNodeValueList);
+            }
+            levelResult.add(currentLevelNodeValueList);
+            System.out.println(debuggerView(++count, "层次遍历-ZIGZAG", levelResult));
+        }
+    }
 
 
     @Data
