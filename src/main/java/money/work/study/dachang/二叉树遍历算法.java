@@ -49,6 +49,7 @@ public class 二叉树遍历算法 {
     private static int count = 0;
     
     public static void main(String[] args) {
+        // 二叉树前序遍历相关
         showOriginNodeData();
         TreeNode<Integer> root = TreeNodeTestUtil.root;
         preOrder(root);
@@ -63,6 +64,7 @@ public class 二叉树遍历算法 {
         stack_PostOrder(root);
         clear();
 
+        // 二叉树中序遍历相关
         showOriginNodeData();
         centerOrder(root);
         clear();
@@ -76,6 +78,7 @@ public class 二叉树遍历算法 {
         stack_CenterOrder(root);
         clear();
 
+        // 二叉树后序遍历相关
         showOriginNodeData();
         postOrder(root);
         clear();
@@ -89,6 +92,7 @@ public class 二叉树遍历算法 {
         stack_PreOrder(root);
         clear();
 
+        // 二叉树层次遍历相关
         showOriginNodeData();
         levelOrder(root);
         clear();
@@ -102,9 +106,11 @@ public class 二叉树遍历算法 {
         levelZigZagOrder(root);
         clear();
 
-
     }
 
+    /**
+     * 打印二叉树
+     */
     private static void showOriginNodeData() {
         // 计数器清零, 递归、迭代次数清零
         count = 0;
@@ -114,6 +120,9 @@ public class 二叉树遍历算法 {
         System.out.println("原始二叉树节点数据: " + CollectionUtil.show(TreeNodeTestUtil.originNodeValveList));
     }
 
+    /**
+     * 清除数据
+     */
     private static void clear() {
         count = 0;
         deepResult.clear();
@@ -195,6 +204,9 @@ public class 二叉树遍历算法 {
         System.out.println(debuggerView(++count, "递归反_后序遍历", deepResult));
     }
 
+    /**
+     * 栈迭代反_后序遍历: 右->左->根
+     */
     public static void stack_PostOrder(TreeNode<Integer> node) {
         if (node == null) {
             return;
@@ -272,6 +284,9 @@ public class 二叉树遍历算法 {
 
     }
 
+    /**
+     * 栈迭代反_中序遍历: 右->根->左
+     */
     public static void stack_CenterOrder(TreeNode<Integer> node) {
         if (node == null) {
             return;
@@ -306,6 +321,9 @@ public class 二叉树遍历算法 {
         System.out.println(debuggerView(++count, "递归后序遍历", deepResult));
     }
 
+    /**
+     * 栈迭代后序遍历: 左->右->根
+     */
     public static void stackPostOrder(TreeNode<Integer> node) {
         if (node == null) {
             return;
@@ -343,6 +361,9 @@ public class 二叉树遍历算法 {
         _preOrder(node.getLeft());
     }
 
+    /**
+     * 栈迭代反_前序遍历: 根->右->左
+     */
     public static void stack_PreOrder(TreeNode<Integer> node) {
         if (node == null) {
             return;
@@ -595,21 +616,6 @@ public class 二叉树遍历算法 {
                     addNode(current, refer.getRight());
                 }
             }
-        }
-
-        public static Object[] reverseArray(Object[] array) {
-            int i = 0;
-            int j = array.length - 1;
-            Object tmp;
-
-            while (j > i) {
-                tmp = array[j];
-                array[j] = array[i];
-                array[i] = tmp;
-                j--;
-                i++;
-            }
-            return array;
         }
     }
     
