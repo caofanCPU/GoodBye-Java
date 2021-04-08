@@ -7,7 +7,7 @@
 - [.line-through]#Zookeeper集群如何保证数据一致性#
 - RocketMQ架构、消费者多线程、数据一致性、事务原理
 - [.line-through]#Spring为什么要用三级缓存解决循环依赖#
-- 快排、归并
+- [.line-through]#快排、归并#
 - [.line-through]#二叉树的(深度遍历)前|中|后; 层次|左视图|右视图|之字型#
 - 递归与动态规划, 递归转换为迭代
 - 服务注册中心, 生产者和消费者如何感知上下线, Eureka(AP特性), Zookeeper(CP特性)

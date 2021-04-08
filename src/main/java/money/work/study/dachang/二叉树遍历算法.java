@@ -39,14 +39,14 @@ public class 二叉树遍历算法 {
     /**
      * 深度遍历结果存储容器, 法号 备忘录
      */
-    private static List<Integer> deepResult = new ArrayList<>();
+    public static List<Integer> deepResult = new ArrayList<>();
 
     /**
      * 层次遍历结果存储容器
      */
-    private static List<List<Integer>> levelResult = new ArrayList<>();
+    public static List<List<Integer>> levelResult = new ArrayList<>();
 
-    private static int count = 0;
+    public static Integer count = 0;
     
     public static void main(String[] args) {
         // 二叉树前序遍历相关
@@ -111,7 +111,7 @@ public class 二叉树遍历算法 {
     /**
      * 打印二叉树
      */
-    private static void showOriginNodeData() {
+    public static void showOriginNodeData() {
         // 计数器清零, 递归、迭代次数清零
         count = 0;
         TreeNodeTestUtil.root = null;
@@ -123,7 +123,7 @@ public class 二叉树遍历算法 {
     /**
      * 清除数据
      */
-    private static void clear() {
+    public static void clear() {
         count = 0;
         deepResult.clear();
         levelResult.clear();
@@ -132,7 +132,7 @@ public class 二叉树遍历算法 {
     /**
      * 栈调试
      */
-    private static <T> String debuggerView(int n, String msg, List<T> source) {
+    public static <T> String debuggerView(int n, String msg, List<T> source) {
         return view(n) + "第" + n + "次[" + msg + ", " + "-> UPDATE[" + CollectionUtil.show(source) + "]";
     }
 
@@ -533,11 +533,11 @@ public class 二叉树遍历算法 {
     @Data
     @Accessors(chain = true)
     public static class TreeNodeTestUtil {
-        private static TreeNode<Integer> root;
+        public static TreeNode<Integer> root;
         /**
          * 原始节点值列表
          */
-        private static List<Integer> originNodeValveList = Lists.newArrayList();
+        public static List<Integer> originNodeValveList = Lists.newArrayList();
 
         private TreeNodeTestUtil() {
 
