@@ -6,14 +6,15 @@
 === TODO
 - [.line-through]#Zookeeper集群如何保证数据一致性#
 - RocketMQ架构、消费者多线程、数据一致性、事务原理
+- Sentinel限流原理
+- 服务注册中心, 生产者和消费者如何感知上下线, Eureka(AP特性), Zookeeper(CP特性)
 - [.line-through]#Spring为什么要用三级缓存解决循环依赖#
 - [.line-through]#快排、归并#
 - [.line-through]#二叉树的(深度遍历)前|中|后; 层次|左视图|右视图|之字型#
-- 递归与动态规划, 递归转换为迭代
-- 服务注册中心, 生产者和消费者如何感知上下线, Eureka(AP特性), Zookeeper(CP特性)
+- [.line-through]#递归与动态规划, 递归转换为迭代#
 - [.line-through]#MySQL底层存储原理, MVCC底层原理#
 - [.line-through]#MySQL数据行最大多少会性能下降明显, 取决于行的长度#
-- HBase原理, MySQL和HBase的根本区别和异同点
+- [.line-through]#HBase原理, MySQL和HBase的根本区别和异同点#
 - 每个用户每天首次登陆领红包, 考虑分布式锁: 读写原子性
 - Kafka消费者如何做多线程, 使用线程池注意点, 处理失败该使用什么拒绝策略
 
@@ -110,6 +111,8 @@ https://blog.csdn.net/pange1991/article/details/53860651
 * Kafka
 * RocketMQ
 * Kafka与RocketMQ的区别
+** Kafka吞吐百万, RocketMQ二十万, 原因在于Kafka生产者分批发送, 消费者批量拉取数据
+** Kafka通过分区扩展, 给个分区Leader, Follower数据备份高可用, RocketMQ
 
 === 算法与数据结构
 

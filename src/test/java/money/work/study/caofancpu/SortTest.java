@@ -1,7 +1,6 @@
-package money.work.study;
+package money.work.study.caofancpu;
 
 import com.xyz.caofancpu.core.CollectionUtil;
-import money.work.study.caofancpu.SortAlgorithmUtil;
 import org.junit.Test;
 import org.springframework.util.StopWatch;
 

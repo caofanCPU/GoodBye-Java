@@ -492,7 +492,7 @@ public class USB {
             }
 
             // 对称性: 右边小值往左边跑
-            while (source[start] <= rv && start < end ) {
+            while (source[start] <= rv && start < end) {
                 start++;
             }
             if (start != end) {
@@ -504,8 +504,5 @@ public class USB {
         source[start] = rv;
         return start;
     }
-
-
-
 
 }

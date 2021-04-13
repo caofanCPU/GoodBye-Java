@@ -1,4 +1,4 @@
-package money.work.study;
+package money.work.study.caofancpu;
 
 import com.xyz.caofancpu.core.CollectionUtil;
 import money.work.study.dachang.二叉树遍历算法;

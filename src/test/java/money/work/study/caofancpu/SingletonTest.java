@@ -1,4 +1,4 @@
-package money.work.study;
+package money.work.study.caofancpu;
 
 import money.work.study.caofancpu.singleinstance.HolderSafeAndForbiddenReflectSingleton;
 import money.work.study.caofancpu.singleinstance.LazySafeAndForbiddenReflectSingleton;

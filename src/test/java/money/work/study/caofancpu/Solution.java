@@ -1,4 +1,4 @@
-package money.work.study;
+package money.work.study.caofancpu;
 
 import org.junit.Test;
 
@@ -15,13 +15,43 @@ public class Solution {
         System.out.println(findMedianTwoSortedArray(a, b));
     }
 
+    @Test
+    public void byteCryCry() {
+        int[] a = new int[]{2, 2, 2, 2};
+        // write code here
+        int maxValue = Integer.MIN_VALUE;
+        int maxIndex = -1;
+        boolean isOk = false;
+        for (int i = 0; i < a.length; i++) {
+            if (i == 0 && a[i] >= a[i + 1]) {
+                // 第一个元素
+                isOk = true;
+            }
+            if (i == (a.length - 1) && a[i] >= a[i - 1]) {
+                // 最后一个元素
+                isOk = true;
+            }
+            if (i > 0 && i < (a.length - 1) && a[i] >= a[i - 1] && a[i] >= a[i + 1]) {
+                isOk = true;
+            }
+            if (isOk && a[i] >= maxValue) {
+                maxValue = a[i];
+                maxIndex = i;
+                // 峰值的右邻居肯定没机会成为峰值, 故跳过
+                i++;
+            }
+        }
+        System.out.println(maxIndex);
+    }
+
     /**
      * find median in two sorted array
+     *
      * @param arr1 int整型一维数组 the array1
      * @param arr2 int整型一维数组 the array2
      * @return int整型
      */
-    public int findMedianTwoSortedArray (int[] arr1, int[] arr2) {
+    public int findMedianTwoSortedArray(int[] arr1, int[] arr2) {
         int[] source = new int[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, source, 0, arr1.length);
         System.arraycopy(arr2, 0, source, arr1.length, arr2.length);
@@ -31,7 +61,7 @@ public class Solution {
     }
 
     public void merge(int[] source, int start, int end) {
-        if (start >= end){
+        if (start >= end) {
             return;
         }
         // 中轴
@@ -57,11 +87,11 @@ public class Solution {
             }
         }
         // 剩余左边的
-        while(i <= mid){
+        while (i <= mid) {
             temp[k++] = source[i++];
         }
         // 剩余右边的
-        while(j <= end) {
+        while (j <= end) {
             temp[k++] = source[j++];
         }
         System.arraycopy(temp, 0, source, start, temp.length);
