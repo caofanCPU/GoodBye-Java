@@ -24,7 +24,9 @@ public class 算法抄习2 {
 
     // 二叉树基础遍历
     public static void main(String[] args) {
-        二叉树基础遍历练习();
+//        二叉树基础遍历练习();
+        combineSum(3, new ArrayList<>(), 1, 10);
+        System.out.println(CollectionUtil.show(result));
     }
 
     /**
@@ -317,6 +319,26 @@ public class 算法抄习2 {
             levelTraverseResultList.add(currentLevelValueList);
         }
     }
+
+    //1~9的数字钟任选K个求和为n的情况
+
+    private static List<List<Integer>> result = new ArrayList<>();
+
+    public static void combineSum(int maxElementSize, List<Integer> tempList, int fromValue, int targetSum) {
+        if (tempList.size() == maxElementSize || targetSum <= 0) {
+            if (tempList.size() == maxElementSize && targetSum == 0) {
+                // 恰好
+                result.add(new ArrayList<>(tempList));
+            }
+            return;
+        }
+        for (int i = fromValue; i <= 9; i++) {
+            tempList.add(i);
+            combineSum(maxElementSize, tempList, i + 1, targetSum - i);
+            tempList.remove(tempList.size() - 1);
+        }
+    }
+
     public static Object[] reverseArray(Object[] array) {
         int i = 0;
         int j = array.length - 1;

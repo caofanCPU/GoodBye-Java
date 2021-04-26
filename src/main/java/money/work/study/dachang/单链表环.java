@@ -29,6 +29,7 @@ import java.util.Objects;
  * @author D8GER
  */
 public class 单链表环 {
+    private static Node<Integer> circleEntranceNode;
 
     public static void main(String[] args) {
         Node<Integer> head = NodeTestUtil.buildLinkedNodeList();
@@ -41,6 +42,7 @@ public class 单链表环 {
         int circleLength = easyCircleLength(meetNode);
         int entranceLength = easyEntranceLength(head, meetNode);
         System.out.println("环的长度为: " + circleLength);
+        System.out.println("入口环节点为: " + circleEntranceNode.getData());
         System.out.println("入口节点长度为: " + entranceLength);
         int nodeSize = circleLength + entranceLength;
         System.out.println("链表总长度为: " + nodeSize);
@@ -101,6 +103,7 @@ public class 单链表环 {
             }
             entranceLength++;
             if (slow == fast) {
+                circleEntranceNode = fast;
                 return entranceLength;
             }
         }

@@ -1,10 +1,11 @@
 package money.work.study.caofancpu;
 
+import com.xyz.caofancpu.core.CollectionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import money.work.study.dachang.二叉树遍历算法;
+import money.work.study.common.datastracture.Node;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class 算法那点事 {
 
     @Test
     public void fftTest() {
-        int[] arr = new int[] {3,7, 6,8,3,2};
+        int[] arr = new int[]{3, 7, 6, 8, 3, 2};
     }
 
     public static void fftSort(int[] source, int start, int end) {
@@ -385,6 +386,165 @@ public class 算法那点事 {
         }
     }
 
+    @Test
+    public void lcs() {
+        System.out.println(longCommonStr("danding", "danteng"));
+    }
+
+    /**
+     * 最长公共子串, 构造二维表, 长>=宽, 短串匹配长串
+     * .   a  b  c  d
+     * .a  1  0  0  0
+     * .b  0  2  0  0
+     * .c  0  0  3  0
+     */
+    public static String longCommonStr(String shortA, String longB) {
+        String none = "无公共子串";
+        if (shortA == null || shortA.length() == 0 || longB == null || longB.length() == 0) {
+            return none;
+        }
+        if (shortA.length() > longB.length()) {
+            return longCommonStr(longB, shortA);
+        }
+        // 比对二维表, 短串为行, 长串为列, 横向矩形
+        int[][] tab = new int[shortA.length()][longB.length()];
+        // 重复字符数
+        int repeatNum = 0;
+        // 最后一个重复字符的索引
+        int lastIndex = 0;
+        for (int i = 0; i < shortA.length(); i++) {
+            for (int j = 0; j < longB.length(); j++) {
+                if (shortA.charAt(i) != longB.charAt(j)) {
+                    tab[i][j] = 0;
+                } else {
+                    // 相等, 首位为1
+                    if (i == 0 || j == 0) {
+                        tab[i][j] = 1;
+                    } else {
+                        tab[i][j] = tab[i - 1][j - 1] + 1;
+                    }
+                }
+                if (repeatNum < tab[i][j]) {
+                    // 更新
+                    repeatNum = tab[i][j];
+                    lastIndex = i;
+                }
+            }
+        }
+        return repeatNum == 0 || (lastIndex + 1 < repeatNum) ? none : shortA.substring(lastIndex + 1 - repeatNum, lastIndex + 1);
+    }
+
+
+    public static int[][] circleEarth(int k, int n) {
+        int[][] tab = new int[k + 1][n];
+        tab[0][0] = 1;
+        for (int i = 1; i < k; i++) {
+            for (int j = 0; j < n; j++) {
+                tab[i][j] = tab[i - 1][(j - 1 + n) % n] + tab[i - 1][(j + 1) % n];
+            }
+        }
+        return tab;
+    }
+
+    private static int maxPath;
+
+    public static int maxPathSum(TreeNode<Integer> node) {
+        if (node == null) {
+            return 0;
+        }
+        int left = maxPathSum(node.getLeft());
+        int right = maxPathSum(node.getRight());
+        maxPath = Math.max(maxPath, node.getValue() + left + right);
+        return node.getValue() + Math.max(left, right);
+    }
+
+    private static boolean balance;
+    private static int height;
+
+    public static int balanceBinary(TreeNode<Integer> node) {
+        if (node == null) {
+            return 0;
+        }
+        int left = balanceBinary(node.getLeft()) + 1;
+        int right = balanceBinary(node.getRight()) + 1;
+        balance = Math.abs(left - right) <= 1;
+        height = Math.max(left, right);
+        return height;
+    }
+
+    public static Node<Integer> meet(Node<Integer> head) {
+        if (head == null) {
+            return null;
+        }
+        Node<Integer> fast = head;
+        Node<Integer> slow = head;
+        while (fast.getNext() != null && fast.getNext().getNext() != null && slow.getNext() != null) {
+            fast = fast.getNext().getNext();
+            slow = slow.getNext();
+            if (fast == slow) {
+                return fast;
+            }
+        }
+        return null;
+    }
+
+    private static Node<Integer> entranceNode = null;
+    public static int entranceNode(Node<Integer> head, Node<Integer> meet) {
+        int entranceLength = 0;
+        Node<Integer> slow = head;
+        Node<Integer> fast = meet;
+        while (slow.getNext() != null && fast.getNext() != null) {
+            slow = slow.getNext();
+            fast = fast.getNext();
+            entranceLength++;
+            if (slow == fast) {
+                entranceNode = slow;
+                break;
+            }
+        }
+        return entranceLength;
+    }
+
+    public static int circleL(Node<Integer> meet) {
+        int length = 0;
+        Node<Integer> fast = meet;
+        Node<Integer> slow = meet;
+        while (fast.getNext() != null && fast.getNext().getNext() != null && slow.getNext() != null) {
+            fast = fast.getNext().getNext();
+            slow = slow.getNext();
+            length++;
+            if (fast == slow) {
+                break;
+            }
+        }
+        return length;
+    }
+
+    private static List<List<Integer>> result = new ArrayList<>();
+    @Test
+    public void combineSumN() {
+        dfsSum(3, new ArrayList<>(), 1, 12);
+        System.out.println(CollectionUtil.show(result));
+    }
+
+    private void dfsSum(int maxElementSize, List<Integer> tempList, int fromValue, int targetSum) {
+        if (tempList.size() == maxElementSize || targetSum <= 0) {
+            if (tempList.size() == maxElementSize && targetSum == 0) {
+                // 恰好求和
+                result.add(new ArrayList<>(tempList));
+            }
+            // 无法构成目标和, 返回
+            return;
+        }
+        for (int i = fromValue; i <= 9; i++) {
+            //选择当前值
+            tempList.add(i);
+            //递归, 拿下一个值去试
+            dfsSum(maxElementSize, tempList, i + 1, targetSum - i);
+            // 试用了的值, 要么满足, 要么不满足, 去掉该值
+            tempList.remove(tempList.size() - 1);
+        }
+    }
 
 
 }

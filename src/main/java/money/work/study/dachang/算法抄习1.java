@@ -22,9 +22,8 @@ public class 算法抄习1 {
 
     public static List<List<Integer>> levelTraverseResultList = Lists.newArrayList();
 
-    // 二叉树基础遍历
     public static void main(String[] args) {
-        二叉树基础遍历练习();
+        System.out.println(mostLongCommonSubString("234787bfsjh", "878346bdhbhj"));
     }
 
     /**
@@ -333,6 +332,47 @@ public class 算法抄习1 {
             i++;
         }
         return array;
+    }
+
+
+
+    public static String mostLongCommonSubString(String shortA, String longB) {
+        String none = "无公共子串";
+        if (shortA == null || shortA.length() == 0 || longB == null || longB.length() == 0) {
+            return none;
+        }
+        if (shortA.length() > longB.length()) {
+            return mostLongCommonSubString(longB, shortA);
+        }
+        if (longB.contains(shortA)) {
+            return shortA;
+        }
+        int[][] tab = new int[shortA.length()][longB.length()];
+        int repeatNum = 0;
+        int lastIndex = 0;
+        // [lastIndex + 1 - repeatNum, lastIndex + 1)
+        for (int i = 0; i < shortA.length(); i++) {
+            for (int j = 0; j < longB.length(); j++) {
+                if (shortA.charAt(i) != longB.charAt(j)) {
+                    tab[i][j] = 0;
+                    continue;
+                }
+                // 相同
+                if (i == 0 || j == 0) {
+                    // 边界
+                    tab[i][j] = 1;
+                } else {
+                    tab[i][j] = tab[i - 1][j - 1] + 1;
+                }
+                // 刷新值
+                if (repeatNum < tab[i][j]) {
+                    repeatNum = tab[i][j];
+                    lastIndex = i;
+                }
+            }
+        }
+        // 边界条件: 重复值为0, 子数组区间非法
+        return repeatNum == 0 || (lastIndex + 1 < repeatNum) ? none : shortA.substring(lastIndex + 1 - repeatNum, lastIndex + 1);
     }
 
 }

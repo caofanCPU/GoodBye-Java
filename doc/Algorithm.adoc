@@ -25,6 +25,9 @@ v1.0, 2021-04-06
 - 二叉树遍历
 ** 6种递归, easy
 ** 栈迭代, 需要技巧, 总体: stack, while(node != null || !stack.isEmpty), node入栈stack, 前序或反_前序, 收集当前node值, node=node.left
+- 链表
+** 单链表环的问题, 是否有环, 有环情况下环的入口节点, 有环情况下环的长度, 有环情况下入口节点到头结点的长度, 链表的总长度
+*** 核心: 计算环的入口节点, 快慢指针法
 
 .排序算法.java
 [source,java]
@@ -933,6 +936,62 @@ public class 二叉树遍历算法 {
 ----
 
 
+.单链表.java
+[source,java]
+----
+
+----
+
+
+
+
+
+
+== KeyWord By
+- 快排, 核心是分区中轴排序函数fftPartition, 函数参数为3个, source|start|end, 参考值rv=[start],
+然后两重循环, 外层start<end, 内层首尾镜像,
+[end]>=rv && end > start 则end--; 出循环后end!=start 则[start]=[end],
+[start]<=rv && start < end 则start++; 出循环后start!=end 则[end]=[start],
+start成为中轴索引值参考值还原source[start]=rv
+
+- 归并, 核心是新数组合并函数merge, 函数参数为4个, source|start|mid|end, 区间排序数组temp=int[end-start+1],
+int i = start, int j= mid + 1, int k, 两个区间[start, mid], [mid+1, end], 3次循环
+#i<=mid && j<=end# 则判断 source[i] < source[j] , true: temp[k++]=source[i++]; false: temp[k++]=source[j++];
+然后就是剩余的, i<=mid, temp[k++]=source[i++]; j<=end, temp[k++]=source[j++],
+将temp排序好的结果覆盖到原数组: System.arraycopy(temp, 0, source, start, temp.length)
+
+- 二叉树, 12种深度遍历, 用栈替换时, 前序|反_前序作为参考, 中序|反_中序根在else条件中, 后序|反_后序则考虑用前序逆序得到;
+4种层次遍历, 层次遍历用队列保存当前层的数据, 然后遍历盖层, 结果用嵌套列表收集
+
+- 二叉树最大路径和, 边界条件node==null 则return 0; left=递归(node.left); right=递归(node.right),
+然后结果收集变量 max=Math.max(max, node.value + left + right), #return# node.value + Math.max(left, right)
+
+- 验证平衡二叉树, 求二叉树最大深度(这个可以考虑层次遍历), 外部变量存储深度, 平衡就是left与right相差<=1;
+边界条件node==null return 0; left=递归(node.left) + 1, right=递归(node.right) + 1;
+balance=(Math.abs(left-right) <= 1), height = Math.max(left, right), #return# height;
+
+- 环球旅行, int k步, int n个节点, 二维表tab=int[k+1][n](步数k是大于0的, 从1开始), tab[0][0]=1, i=1<K && j=0<n
+则tab[i][j]=tab[i-1][(j-1+n)%n] + tab[i-1][(j+1)%n]
+
+- 跳台阶, 记住: 1 2 3 5 8 这个数列
+
+- 环链表, 关键点快慢指针找到第一次相遇节点M, 这样是否有环, 环的长度L, 环的入口节点, 环的入口长度, 链表总长度都知道了,
+找M: head==null return null; fast=head, slow=head; fast.next!=null && fast.next.next!=null && slow.next!=null
+则fast=fast.next.next, slow=slow.next,
+若fast==slow, 相遇了return fast, 这样环的相遇节点M就找到了;
+根据M、head求环的入口长度、环的入口节点, fast=M, slow=head, fast.next!=null && slow.next!=null fast=fast.next slow=slow.next,
+外部长度计数器++, 当fast==slow时就得到了环的入口节点, 环的入口长度;
+根据M求环长L, fast=M, slow=M, fast为2倍速slow再相遇一次就得到了环长,
+fast.next!=null && fast.next.next!=ull && slow.next!=null, fast=fast.next.next slow=slow.next, fast==slow就拿到结果了
+
+- 最大公共子串, 短串长串构建横向矩形, 二维表tab[shortA.length][longB.length], 2层循环构建二维表,
+将重复字符总数外存到repeatNum中, 最后一个重复字符索引为lastIndex,
+i=0 && < shortA.length, j=0 && < longB.length, 若shortA.charAt(i)!=longB.charAt(j), tab[i][j]=0, continue;
+字符相同情况下, tab[i][j]=tab[i-1][j-1]+1, 考虑到i-1|j-1的边界问题, 需要先处理i==0||j==0 就是tab[i][j]=1;
+判断repeatNum < tab[i][j], 更新值 repeat=tab[i][j]; lastIndex=i
+最后染回short的子串: shortA.subString(lastIndex+1-repeatNum, lastIndex+1),
+考虑边界条件lastIndex+1 - repeatNum > 0 则lastIndex+1 > repeatNum, 并且repeatNum也需要>0, 为0则无重复, 则:
+return repeatNum==0 || lastIndex+1 < repeatNum ? "none" : shortA.subString(lastIndex+1 -repeatNum, lastIndex+1)
 
 
 
@@ -945,12 +1004,4 @@ public class 二叉树遍历算法 {
 
 
 
-
-
-
-
-
-
-
-
-== LeetCode题
+== LeetCode

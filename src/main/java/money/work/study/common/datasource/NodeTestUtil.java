@@ -58,6 +58,11 @@ public class NodeTestUtil {
             originNodeValveList.add(current.getData());
             current = current.getNext();
         }
+        System.out.println(
+                ".   ①  -->  ④  -->  ③  -->  ⑤\n" +
+                ".                    |        |\n" +
+                ".                    |        |\n" +
+                ".                    ⑨  <--  ②");
         System.out.println(CollectionUtil.show(originNodeValveList));
     }
 }

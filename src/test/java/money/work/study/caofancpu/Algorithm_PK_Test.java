@@ -773,4 +773,25 @@ public class Algorithm_PK_Test {
         System.out.println(二叉树遍历算法.debuggerView(count, "栈迭代反_后序遍历最终结果", deepResult));
     }
 
+    @Test
+    public void No_二叉树最大路径和() {
+        // 二叉树最大路径和, 递归
+        二叉树遍历算法.showOriginNodeData();
+        二叉树遍历算法.TreeNode<Integer> root = 二叉树遍历算法.TreeNodeTestUtil.root;
+        dfs(root);
+        System.out.println(maxPathSum);
+    }
+
+    private static int maxPathSum = 0;
+
+    private static int dfs(二叉树遍历算法.TreeNode<Integer> root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = Math.max(0, dfs(root.getLeft()));
+        int right = Math.max(0, dfs(root.getRight()));
+        maxPathSum = Math.max(maxPathSum, root.getValue() + left + right);
+        return root.getValue() + Math.max(left, right);
+    }
+
 }

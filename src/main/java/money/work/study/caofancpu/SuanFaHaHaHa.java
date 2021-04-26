@@ -22,10 +22,8 @@ import java.util.Stack;
 public class SuanFaHaHaHa {
 
     public static void main(String[] args) {
-//        new 基础二叉树().test();
-//        new 二叉树最大路径和().test();
-//        new 平衡二叉树().test();
-        new 环球旅行().test();
+        new 环球旅行(6, 3).test();
+//        new 最长公共子串("234787bfsjh", "878346bdhbhj").test();
     }
 
     public static abstract class Base {
@@ -67,12 +65,12 @@ public class SuanFaHaHaHa {
                 for (int j = 0; j < longB.length; j++) {
                     if (shortA[i] != longB[j]) {
                         table[i][j] = 0;
+                        continue;
+                    }
+                    if (i == 0 || j == 0) {
+                        table[i][j] = 1;
                     } else {
-                        if (i == 0 || j == 0) {
-                            table[i][j] = 1;
-                        } else {
-                            table[i][j] = table[i - 1][j - 1] + 1;
-                        }
+                        table[i][j] = table[i - 1][j - 1] + 1;
                     }
                     if (repeatNum < table[i][j]) {
                         repeatNum = table[i][j];
@@ -135,6 +133,7 @@ public class SuanFaHaHaHa {
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
+    @Deprecated
     public static class 最长公共子串 extends Base {
         private String sourceA = "abcd";
         private String sourceB = "abc";
@@ -172,12 +171,13 @@ public class SuanFaHaHaHa {
                 for (int j = 0; j < longB.length(); j++) {
                     if (shortA.charAt(i) != longB.charAt(j)) {
                         table[i][j] = 0;
+                        continue;
+                    }
+                    // 相同
+                    if (i == 0 || j == 0) {
+                        table[i][j] = 1;
                     } else {
-                        if (i == 0 || j == 0) {
-                            table[i][j] = 1;
-                        } else {
-                            table[i][j] = table[i - 1][j - 1] + 1;
-                        }
+                        table[i][j] = table[i - 1][j - 1] + 1;
                     }
                     if (repeatNum < table[i][j]) {
                         repeatNum = table[i][j];
@@ -223,15 +223,17 @@ public class SuanFaHaHaHa {
      * .  初始条件: table[0][0]=1
      * .  动态规划函数式: table[step][i]=左斜上角+右斜上角
      * .  考虑到索引边界问题: table[step][i]也需要=左上角+右上角
-     * .  公式: table[step][i] = table[step-1][(i-1+n)%n] + table[step-1][(i+1+n)%n]
+     * .  公式: table[step][i] = table[step-1][(i-1+n)%n] + table[step-1][(i+1)%n]
      * .  得到的二维表能代表从【0】出发经过【k】步到达节点【n】的所有情况
      * 优化: 处理特殊情况, 尽早返回
+     * 示例:
      */
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
+    @Deprecated
     public static class 环球旅行 extends Base {
         /**
          * 点的个数
@@ -265,7 +267,7 @@ public class SuanFaHaHaHa {
             for (int step = 1; step <= k; step++) {
                 for (int index = 0; index < n; index++) {
                     dp[step][index] = dp[step - 1][(index - 1 + n) % n] + dp[step - 1][(index + 1) % n];
-                    System.out.println("(" + step + ", " + index + ")=(" + (step - 1) + ", " + ((index - 1 + n) % n) + ") + (" + (step - 1) + ", " + ((index + 1 + n) % n) + ")");
+                    System.out.println("(" + step + ", " + index + ")=(" + (step - 1) + ", " + ((index - 1 + n) % n) + ") + (" + (step - 1) + ", " + ((index + 1) % n) + ")");
                 }
             }
             return dp;
@@ -498,6 +500,7 @@ public class SuanFaHaHaHa {
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
+    @Deprecated
     public static class 最长回文子串 extends Base {
         private String source = "abcbadddddddddd";
 
@@ -591,12 +594,14 @@ public class SuanFaHaHaHa {
     /**
      * 基本思路: 边界值, n=0, n=1时, 进而发现是递归调用, 再使用迭代改进递归
      * .  相当于应用数学归纳法
+     * .  记住, 1 + 2 + 3 + 5 + 8, 后一项等于前两项之和
      */
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
+    @Deprecated
     public static class 跳台阶 extends Base {
         private int n = 3;
 
@@ -633,6 +638,7 @@ public class SuanFaHaHaHa {
             int result = 0;
             for (int i = 3; i <= value; i++) {
                 result = a1 + a2;
+                System.out.println("a1=" + a1 + ", a2=" + a2 + ", result=" + result);
                 // 迭代推进
                 a1 = a2;
                 a2 = result;
@@ -671,6 +677,7 @@ public class SuanFaHaHaHa {
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
+    @Deprecated
     public static class 二叉树最大路径和 extends Base {
         private int maxSum = Integer.MIN_VALUE;
 
@@ -708,6 +715,7 @@ public class SuanFaHaHaHa {
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
+    @Deprecated
     public static class 平衡二叉树 extends Base {
         private boolean balance;
         private TreeNode<Integer> root;
@@ -762,6 +770,7 @@ public class SuanFaHaHaHa {
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
+    @Deprecated
     public static class 基础二叉树 extends Base {
         /**
          * 根节点
