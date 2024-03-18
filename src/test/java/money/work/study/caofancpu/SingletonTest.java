@@ -28,20 +28,14 @@ public class SingletonTest {
     }
 
     @Test
-    public static void testLazySingleton() {
+    public void testLazySingleton() {
         try {
-            Class<LazySafeAndForbiddenReflectSingleton> clazz = (Class<LazySafeAndForbiddenReflectSingleton>) Class.forName("com.xyz.caofancpu.trackingtime.studywaitingutils.singleinstance.LazySafeAndForbiddenReflectSingleton");
+            @SuppressWarnings("unchecked") Class<LazySafeAndForbiddenReflectSingleton> clazz = (Class<LazySafeAndForbiddenReflectSingleton>) Class.forName("com.xyz.caofancpu.trackingtime.studywaitingutils.singleinstance.LazySafeAndForbiddenReflectSingleton");
             Constructor<LazySafeAndForbiddenReflectSingleton> constructor = clazz.getDeclaredConstructor(null);
             constructor.setAccessible(true);
             LazySafeAndForbiddenReflectSingleton instance2 = constructor.newInstance();
             System.out.println(instance2);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
 
@@ -51,7 +45,7 @@ public class SingletonTest {
 
     private void testReflectBefore()
             throws Exception {
-        Class<HolderSafeAndForbiddenReflectSingleton> aClass = (Class<HolderSafeAndForbiddenReflectSingleton>) Class.forName("com.xyz.caofancpu.trackingtime.studywaitingutils.singleinstance.HolderSafeAndForbiddenReflectSingleton");
+        @SuppressWarnings("unchecked") Class<HolderSafeAndForbiddenReflectSingleton> aClass = (Class<HolderSafeAndForbiddenReflectSingleton>) Class.forName("com.xyz.caofancpu.trackingtime.studywaitingutils.singleinstance.HolderSafeAndForbiddenReflectSingleton");
         Constructor<HolderSafeAndForbiddenReflectSingleton> constructor = aClass.getDeclaredConstructor(null);
         constructor.setAccessible(true);
         HolderSafeAndForbiddenReflectSingleton instance2 = constructor.newInstance();
@@ -64,7 +58,7 @@ public class SingletonTest {
             throws Exception {
         HolderSafeAndForbiddenReflectSingleton instance1 = HolderSafeAndForbiddenReflectSingleton.getInstance();
         System.out.println(instance1);
-        Class<HolderSafeAndForbiddenReflectSingleton> aClass = (Class<HolderSafeAndForbiddenReflectSingleton>) Class.forName("com.xyz.caofancpu.trackingtime.studywaitingutils.singleinstance.HolderSafeAndForbiddenReflectSingleton");
+        @SuppressWarnings("unchecked") Class<HolderSafeAndForbiddenReflectSingleton> aClass = (Class<HolderSafeAndForbiddenReflectSingleton>) Class.forName("com.xyz.caofancpu.trackingtime.studywaitingutils.singleinstance.HolderSafeAndForbiddenReflectSingleton");
         Constructor<HolderSafeAndForbiddenReflectSingleton> constructor = aClass.getDeclaredConstructor(null);
         constructor.setAccessible(true);
         HolderSafeAndForbiddenReflectSingleton instance2 = constructor.newInstance();
